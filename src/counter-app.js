@@ -1,5 +1,6 @@
 import { LitElement, html, css } from "lit";
 import { DDDSuper } from "@haxtheweb/d-d-d/d-d-d.js";
+import { classMap } from 'lit/directives/class-map.js'
 
 export class counterApp extends DDDSuper(LitElement) {
 
@@ -49,6 +50,7 @@ export class counterApp extends DDDSuper(LitElement) {
         display: flex;
         flex-direction: column;
         border: solid;
+        background-color: #fff;
       }
 
       #counter {
@@ -60,6 +62,7 @@ export class counterApp extends DDDSuper(LitElement) {
       }
       h2 {
         font-size: 128px;
+        font-family: Lato;
       }
 
       #button-wrapper {
@@ -71,15 +74,40 @@ export class counterApp extends DDDSuper(LitElement) {
         gap: 8px;
       }
 
-      #minus, #plus {
+      #minus {
         width: 188px;
         height: 184px;
         font-size: 64px;
+        font-family: Lato;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        background-color: #fce5e3;
+      }
+      #plus {
+        width: 188px;
+        height: 184px;
+        font-size: 64px;
+        font-family: Lato;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        background-color: #e3fce9;
+      }
+      #minus:hover, #minus:focus {
+        box-shadow: none;
+        background-color: #edd7d5;
+      } 
+      #plus:hover, #plus:focus {
+        box-shadow: none;
+        background-color: #d3ebd9;
       }
     `];
   }
 
   render() {
+    const classes = {
+      'eighteen': this.counter === 18,
+      'twentyOne': this.counter === 21,
+      'minOrMax': this.counter === this.min || this.counter === this.max
+    };
+
     return html`
       <!--
       <div class="wrapper">
@@ -87,20 +115,40 @@ export class counterApp extends DDDSuper(LitElement) {
         <slot></slot>
       </div>
       -->
+      <style>
+        .minOrMax {
+          color: grey;
+        }
+        .eighteen {
+          color: #03bafc;
+        }
+        .twentyOne {
+          color: #ff9ef2;
+        }
+      </style>
       <div id="counter-wrapper">
         <div id="counter">
-          <h2>${this.counter}</h2>
+          <h2 class="${classMap(classes)}">${this.counter}</h2>
         </div>
         <div id="button-wrapper">
-          <button id="minus" @click=${this.handleButtonClick}>-</button>
-          <button id="plus" @click=${this.handleButtonClick}>+</button>
+          <button id="minus" @click=${this.minusButtonClick} ?disabled="${this.min === this.counter}">-</button>
+          <button id="plus" @click=${this.plusButtonClick} ?disabled="${this.max === this.counter}">+</button>
         </div>
       </div>
     `;
   }
 
-  handleButtonClick() {
-    console.log("Button clicked!");
+  minusButtonClick() {
+    console.log("Minus button clicked!");
+    if (this.counter > this.min) {
+      this.counter -= 1;
+    }
+  }
+  plusButtonClick() {
+    console.log("Plus button clicked!");
+    if (this.counter < this.max) {
+      this.counter += 1;
+    }
   }
 
   /**
