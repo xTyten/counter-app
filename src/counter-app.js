@@ -10,11 +10,17 @@ export class counterApp extends DDDSuper(LitElement) {
   constructor() {
     super();
     this.title = "";
+    this.counter = 1;
+    this.min = 0;
+    this.max = 10;
   }
 
   static get properties() {
     return {
       title: { type: String },
+      counter: { type: Number },
+      min: { type: Number },
+      max: { type: Number },
     };
   }
 
@@ -36,15 +42,65 @@ export class counterApp extends DDDSuper(LitElement) {
         padding: 0;
         margin: 0;
       }
+
+      #counter-wrapper {
+        width: 400px;
+        height: 400px;
+        display: flex;
+        flex-direction: column;
+        border: solid;
+      }
+
+      #counter {
+        width: 100%;
+        height: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      h2 {
+        font-size: 128px;
+      }
+
+      #button-wrapper {
+        width: 100%;
+        height: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      #minus, #plus {
+        width: 188px;
+        height: 184px;
+        font-size: 64px;
+      }
     `];
   }
 
   render() {
     return html`
-<div class="wrapper">
-  <div>${this.title}</div>
-  <slot></slot>
-</div>`;
+      <!--
+      <div class="wrapper">
+        <div>${this.title}</div>
+        <slot></slot>
+      </div>
+      -->
+      <div id="counter-wrapper">
+        <div id="counter">
+          <h2>${this.counter}</h2>
+        </div>
+        <div id="button-wrapper">
+          <button id="minus" @click=${this.handleButtonClick}>-</button>
+          <button id="plus" @click=${this.handleButtonClick}>+</button>
+        </div>
+      </div>
+    `;
+  }
+
+  handleButtonClick() {
+    console.log("Button clicked!");
   }
 
   /**
