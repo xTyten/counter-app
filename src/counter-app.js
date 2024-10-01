@@ -126,15 +126,18 @@ export class counterApp extends DDDSuper(LitElement) {
           color: #ff9ef2;
         }
       </style>
-      <div id="counter-wrapper">
-        <div id="counter">
-          <h2 class="${classMap(classes)}">${this.counter}</h2>
+
+      <confetti-container id="confetti">
+        <div id="counter-wrapper">
+          <div id="counter">
+            <h2 class="${classMap(classes)}">${this.counter}</h2>
+          </div>
+          <div id="button-wrapper">
+            <button id="minus" @click=${this.minusButtonClick} ?disabled="${this.min === this.counter}">-</button>
+            <button id="plus" @click=${this.plusButtonClick} ?disabled="${this.max === this.counter}">+</button>
+          </div>
         </div>
-        <div id="button-wrapper">
-          <button id="minus" @click=${this.minusButtonClick} ?disabled="${this.min === this.counter}">-</button>
-          <button id="plus" @click=${this.plusButtonClick} ?disabled="${this.max === this.counter}">+</button>
-        </div>
-      </div>
+      </confetti-container>
     `;
   }
 
@@ -151,6 +154,35 @@ export class counterApp extends DDDSuper(LitElement) {
     }
   }
 
+  updated(changedProperties) {
+    if (changedProperties.has('counter')) {
+      if(this.counter === 21) {
+        console.log("Equal to 21");
+        this.makeItRain();
+      }
+    }
+  }
+  
+  makeItRain() {
+    console.log("makeItRain() is now running");
+    // this is called a dynamic import. It means it won't import the code for confetti until this method is called
+    // the .then() syntax after is because dynamic imports return a Promise object. Meaning the then() code
+    // will only run AFTER the code is imported and available to us
+    import("@haxtheweb/multiple-choice/lib/confetti-container.js").then(
+      (module) => {
+        // This is a minor timing 'hack'. We know the code library above will import prior to this running
+        // The "set timeout 0" means "wait 1 microtask and run it on the next cycle.
+        // this "hack" ensures the element has had time to process in the DOM so that when we set popped
+        // it's listening for changes so it can react
+        setTimeout(() => {
+          // forcibly set the poppped attribute on something with id confetti
+          // while I've said in general NOT to do this, the confetti container element will reset this
+          // after the animation runs so it's a simple way to generate the effect over and over again
+          this.shadowRoot.querySelector("#confetti").setAttribute("popped", "");
+        }, 0);
+      }
+    );
+  }
   /**
    * haxProperties integration via file reference
    */
