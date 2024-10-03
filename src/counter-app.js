@@ -98,15 +98,28 @@ export class counterApp extends DDDSuper(LitElement) {
         box-shadow: none;
         background-color: #d3ebd9;
       }
+
+      .minOrMax {
+        color: grey;
+      }
+      .eighteen {
+        color: #03bafc;
+      }
+      .twentyOne {
+        color: #ff9ef2;
+      }
     `];
   }
 
   render() {
+    /*
     const classes = {
       'eighteen': this.counter === 18,
       'twentyOne': this.counter === 21,
       'minOrMax': this.counter === this.min || this.counter === this.max
     };
+    <h2 class="${classMap(classes)}">${this.counter}</h2>
+    */
 
     return html`
       <!--
@@ -115,6 +128,7 @@ export class counterApp extends DDDSuper(LitElement) {
         <slot></slot>
       </div>
       -->
+      <!--
       <style>
         .minOrMax {
           color: grey;
@@ -126,11 +140,12 @@ export class counterApp extends DDDSuper(LitElement) {
           color: #ff9ef2;
         }
       </style>
+      -->
 
       <confetti-container id="confetti">
         <div id="counter-wrapper">
           <div id="counter">
-            <h2 class="${classMap(classes)}">${this.counter}</h2>
+            <h2 id="number">${this.counter}</h2>
           </div>
           <div id="button-wrapper">
             <button id="minus" @click=${this.minusButtonClick} ?disabled="${this.min === this.counter}">-</button>
@@ -146,18 +161,51 @@ export class counterApp extends DDDSuper(LitElement) {
     if (this.counter > this.min) {
       this.counter -= 1;
     }
+
+    if (this.counter == 18) {
+      this.shadowRoot.getElementById("number").classList.toggle("eighteen");
+    }
+    else if (this.counter == 21) {
+      this.shadowRoot.getElementById("number").classList.toggle("twentyOne");
+    } 
+    else if (this.counter == this.min) {
+      this.shadowRoot.getElementById("number").classList.toggle("minOrMax");
+    } 
+    else if (this.counter == this.max) {
+      this.shadowRoot.getElementById("number").classList.toggle("minOrMax");
+    } else {
+      this.shadowRoot.getElementById("number").classList.remove("eighteen");
+      this.shadowRoot.getElementById("number").classList.remove("twentyOne");
+      this.shadowRoot.getElementById("number").classList.remove("minOrMax");
+    }
   }
   plusButtonClick() {
     console.log("Plus button clicked!");
     if (this.counter < this.max) {
       this.counter += 1;
     }
+
+    if (this.counter == 18) {
+      this.shadowRoot.getElementById("number").classList.toggle("eighteen");
+    }
+    else if (this.counter == 21) {
+      this.shadowRoot.getElementById("number").classList.toggle("twentyOne");
+    } 
+    else if (this.counter == this.min) {
+      this.shadowRoot.getElementById("number").classList.toggle("minOrMax");
+    } 
+    else if (this.counter == this.max) {
+      this.shadowRoot.getElementById("number").classList.toggle("minOrMax");
+    } else {
+      this.shadowRoot.getElementById("number").classList.remove("eighteen");
+      this.shadowRoot.getElementById("number").classList.remove("twentyOne");
+      this.shadowRoot.getElementById("number").classList.remove("minOrMax");
+    }
   }
 
   updated(changedProperties) {
     if (changedProperties.has('counter')) {
       if(this.counter === 21) {
-        console.log("Equal to 21");
         this.makeItRain();
       }
     }
